@@ -1,0 +1,57 @@
+{% load static %}
+
+<html>
+<head>
+<!--<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>-->
+<script src="{% static "jquery-1.12.4.min.js" %}"></script>
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+    {% if json_response %}
+        var obj = JSON.parse('{{ json_response | escapejs }}');
+        console.log(obj.results.google)
+        var pretty = JSON.stringify(obj, undefined, 4);
+        //console.log(pretty); #for debuigging
+        $("#result").val('').val(pretty);
+    {% endif %}
+    {% if error %}
+        alert('Error while processing data');
+    {% endif %}
+});
+
+function validate()
+{
+    if ($("#search").val() == '')
+    {
+        alert('Insert search query');
+        return false
+    }
+    else
+    {       
+        return true;
+    }
+}
+
+</script>
+</head>
+<body>
+<form action="/myapp/getdata" onsubmit="return validate()">
+  Search Query:
+  <input type="search" name="search" id="search">
+  <br>
+  <br>
+  Timeout:  
+  <select name="timeout" id="timeout">
+  <option value="0.3">Default</option>
+  <option value="1.0">1</option>
+  <option value="2.0">2</option>
+  </select>
+  <br>
+  <br>
+  <br>
+  <input type="submit">
+</form>
+    Results:
+    <div id="json"><textarea rows="20" cols="200" id="result"> </textarea></div>
+</body>
+</html>
